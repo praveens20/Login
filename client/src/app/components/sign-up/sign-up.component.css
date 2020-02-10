@@ -1,0 +1,32 @@
+.container{
+    width: 40%;
+    margin-top: 15%;
+}
+
+.form-control{
+    border-color: black;
+    border-radius: 5px;
+}
+
+.user-icon{
+    font-size: 8em;
+}
+
+.right{
+    border: 1px solid aqua;
+    height: 50%;
+}
+
+.signup{
+    background-color: aqua;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 20px;
+}
+
+.signin{
+    color: aqua;
+    font-weight: 700;
+    background-color: white;
+    border: white;
+}

@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row justify-content-center">
+    <form class="left col-md-8" (submit)="signup()">
+        <div class="form-group">
+            <input type="email" class="form-control" id="email" placeholder="Email" [(ngModel)]="email" name="email" autofocus>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" placeholder="Password" [(ngModel)]="password" name="password">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="fullName" placeholder="Full Name" [(ngModel)]="fullName" name="fullName">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="location" placeholder="Current Location" [(ngModel)]="location" name="location">
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="agree" [(ngModel)]="agree" name="agree">
+            <label class="form-check-label" for="agree">I agree to all Terms & Conditions</label>
+        </div>
+        <div class="form-group text-center">
+        <button type="submit" class="btn signup"><strong>Sign up</strong></button>
+        </div>
+        <div class="form-group text-center">
+        <label for="old" id="old">Already a member?</label> 
+        <button class="signin" (click)="navigateSignin()">Sign in</button>
+        </div>
+    </form>
+
+    <div class="right col-md-4 text-center">
+        <div class="user-icon">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+        </div>
+        <h6 class="">Add Profile Pic</h6>
+    </div>
+    </div>
+</div>

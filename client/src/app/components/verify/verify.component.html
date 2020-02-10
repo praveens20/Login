@@ -1,0 +1,10 @@
+<form class="container justify-content-center text-center" (submit)="verify()">
+    <h5 class="colored">Verify your Email Address</h5>
+    <h4>Enter 5 digit OTP sent on {{email}}</h4>
+    <div class="input">
+        <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange($event)" [config]="{length:5, allowNumbersOnly:true}"></ng-otp-input>
+    </div><br>
+    <div class="form-group text-center">
+        <button type="submit" class="btn blogging"><strong>Start Blogging</strong></button>
+    </div>
+</form>

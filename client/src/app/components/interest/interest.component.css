@@ -1,0 +1,19 @@
+.container{
+    margin-top: 15%;
+}
+
+.interest{
+    border: 1px solid aqua;
+    margin-left: 50px;
+}
+.interest:hover{
+    background-color: aqua;
+    color: white;
+}
+
+.next{
+    background-color: aqua;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 20px;
+}
