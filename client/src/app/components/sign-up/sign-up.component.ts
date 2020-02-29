@@ -45,9 +45,9 @@ export class SignUpComponent implements OnInit {
           alert(JSON.stringify(user.msg));
           if(user.msg!="Email already exist")
           {
-                localStorage.setItem('token', user.token);
-                this.userService.sendOtp(newUser).subscribe(res=> console.log(res));
-                this.navigateVerify();
+            localStorage.setItem('token', user.token);
+            this.userService.sendOtp(newUser).subscribe(res=> console.log(res));
+            this.navigateVerify();     
           }
         });
     }
