@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
     email:{
@@ -18,6 +17,14 @@ const userSchema = new mongoose.Schema({
     location:{
         type: String,
         required:'Please enter location'
+    },
+    isVerified:{
+        type: Boolean,
+        default: false
+    },
+    otp:{
+        type: String,
+        default: ''
     }
 }, { versionKey : false });
 

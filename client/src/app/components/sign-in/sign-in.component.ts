@@ -31,7 +31,7 @@ export class SignInComponent implements OnInit {
           if(data.msg=="Password matched")
           {
             localStorage.setItem('token',data.token);
-            this.navigateDashboard();
+            this.navigateVerify();
           }
           else
           {
@@ -45,8 +45,8 @@ export class SignInComponent implements OnInit {
     this.router.navigate(['signup']);
   }  
 
-  navigateDashboard(){
-    this.router.navigate(['dashboard']);
-  }  
+  navigateVerify(){
+    this.router.navigate(['verify']);
+  } 
 
 }

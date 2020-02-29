@@ -11,28 +11,29 @@ export class UserService {
   constructor( private http:HttpClient, private router:Router ) { }
 
   addUser(user){
-    return this.http.post("http://localhost:3000/user", user).pipe(
-      map((response:any) => response))
+    return this.http.post("http://localhost:3000/saveUser", user).pipe(map((response:any) => response))
   }
 
   authenticateUser(user){
-    return this.http.post("http://localhost:3000/authenticate" , user).pipe(
-      map((response:any) => response))
+    return this.http.post("http://localhost:3000/authenticate" , user).pipe(map((response:any) => response))
   }
 
   getUserData(){
-    return this.http.get("http://localhost:3000/profile",
+    return this.http.get("http://localhost:3000/getProfile",
     { params: new HttpParams().append('token', localStorage.getItem('token'))})
   }
 
   sendOtp(user){
-    return this.http.post("http://localhost:3000/otp" , user).pipe(
-      map((response:any) => response))
+    return this.http.post("http://localhost:3000/sendotp" , user).pipe(map((response:any) => response))
   }
 
   verifyOtp(){
-    return this.http.get("http://localhost:3000/otp",
-    { params: new HttpParams().append('otp', localStorage.getItem('sentotp'))})
+    return this.http.get("http://localhost:3000/fetchotp",
+    { params: new HttpParams().append('token', localStorage.getItem('token'))})
+  }
+
+  verifyUser(data){
+    return this.http.patch("http://localhost:3000/verified",data).pipe(map((response:any) => response))
   }
 
   isLoggedIn(){
@@ -46,28 +47,14 @@ export class UserService {
     }
   }
 
-  isVerified(){
-    if(localStorage.getItem('sentotp'))
-    {
-      return false;
-    }
-    else
-    {
-      return true;
-    }
-  }
-
   ifToken(){
-    if(this.isLoggedIn() && this.isVerified())
-    {
-      this.router.navigate(['dashboard']);
-      return;
-    }
-    else if(this.isLoggedIn())
+   if(this.isLoggedIn())
     {
       this.router.navigate(['verify']);
       return;
     }   
   } 
+
+ 
   
 }

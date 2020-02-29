@@ -15,8 +15,19 @@ export class DashboardComponent implements OnInit {
   location:string = '';
 
   ngOnInit() {
-    this.userService.ifToken();
-    this.getUser();
+    this.userService.getUserData().subscribe(data => 
+      {
+        console.log(data["isVerified"]);
+        if(data["isVerified"] == false)
+        {
+          this.navigateVerify();
+        }
+        else
+        {
+          this.fullName = data["fullName"];
+          this.location = data["location"];
+        }
+      })
   }
 
   signout(){
@@ -24,12 +35,8 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['signin']);
   }
 
-  getUser(){
-    this.userService.getUserData().subscribe(data => 
-      {
-        this.fullName = data["fullName"];
-        this.location = data["location"];
-      })
-  }
+  navigateVerify(){
+    this.router.navigate(['verify']);
+  } 
 
 }

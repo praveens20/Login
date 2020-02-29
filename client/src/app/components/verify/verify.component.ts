@@ -13,7 +13,6 @@ export class VerifyComponent implements OnInit {
   constructor(private router:Router, private validation:ValidationService, private userService:UserService ) { }
 
   input = '';
-
   @ViewChild('ngOtpInput', {static:false}) ngOtpInputRef:any;
 
   onOtpChange(otp) {
@@ -25,6 +24,14 @@ export class VerifyComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userService.getUserData().subscribe(data => 
+      {
+        console.log(data["isVerified"]);
+        if(data["isVerified"] == true)
+        {
+          this.navigateDashboard();
+        }
+      })
   }
 
   navigateDashboard(){
@@ -36,11 +43,13 @@ export class VerifyComponent implements OnInit {
     {
       this.userService.verifyOtp().subscribe(data => 
       {
-        if(data["otp"] == this.input)
+        if(data == this.input)
         {
-          alert("Verified successfully");
-          localStorage.removeItem('sentotp');
-          this.navigateDashboard();
+          this.userService.verifyUser({"token":localStorage.getItem("token")}).subscribe(msg => {
+            alert(JSON.stringify(msg.msg));
+            this.navigateDashboard();
+          });
+          
         }
         else
         {
@@ -49,5 +58,6 @@ export class VerifyComponent implements OnInit {
       })
     }
   }
+
 
 }

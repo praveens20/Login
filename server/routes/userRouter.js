@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -10,7 +9,7 @@ const User = require("../models/user");
 const router = express.Router();
 
 //creating a new user
-router.post('/user',(req,res,next) => {
+router.post('/saveUser',(req,res,next) => {
     const newUser = new User({
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10)),   //hashing password
@@ -23,7 +22,11 @@ router.post('/user',(req,res,next) => {
                 if(users.length==0) //if user does not exist
                 {
                     newUser.save()
-                        .then(user => res.json({"msg":"User "+user.email+ " Created successfully! Please Sign in to continue"}))   
+                        .then(user => 
+                            {
+                                let token = jwt.sign({ email: user.email }, 'secret', { expiresIn:'1h' });
+                                res.json({"msg":"User "+user.email+ " Created successfully!", token})
+                            })   
                         .catch(err => res.json(err))
                 }
                 else
@@ -46,7 +49,7 @@ router.post('/authenticate',(req,res,next) => {
                 {
                     if(bcrypt.compareSync(req.body.password, user.password))    //if password matches
                     {
-                        let token = jwt.sign({email: user.email, fullName: user.fullName, location: user.location}, 'secret', { expiresIn:'1h' });
+                        let token = jwt.sign({email: user.email }, 'secret', { expiresIn:'1h' });
                         res.json({"msg":"Password matched", token});
                     }
                     else    //if password doesn't match
@@ -59,7 +62,7 @@ router.post('/authenticate',(req,res,next) => {
 })
 
 
-router.get('/profile', (req,res,next) => {
+router.get('/getProfile', (req,res,next) => {
     jwt.verify(req.query.token, 'secret', (err,data) => {
         if(err)
         {
@@ -67,14 +70,16 @@ router.get('/profile', (req,res,next) => {
         }
         else if(data)
         {
-            return res.json({"email":data.email, "fullName":data.fullName, "location":data.location});
+            User.findOne({ email:data.email })
+                .then(user => res.json(user))
+                .catch(err => res.json(err))        
         }
     })
 })
 
 
 
-router.post('/otp',(req,res,next) => {
+router.post('/sendotp',(req,res,next) => {
     //setting up the nodemailer
     const transport = nodemailer.createTransport(smtpTransport({
         service: 'gmail',
@@ -100,27 +105,51 @@ router.post('/otp',(req,res,next) => {
         {
             res.json(err);
         } 
-        else 
+        else
         {
-            let sentotp = jwt.sign({otp: otp}, 'secret', { expiresIn:'1h' });
-            res.json({"msg":"Email sent", sentotp});
+            User.findOneAndUpdate({ email:req.body.email }, {$set:{"otp":otp}})
+                .then(user => res.json({"msg":"Email sent"}))
+                .catch(err => res.json(err))
         }
       })
 })
 
 
-router.get('/otp',(req,res,next) => {
-    jwt.verify(req.query.otp, 'secret', (err,data) => {
+router.get('/fetchotp',(req,res,next) => {
+    jwt.verify(req.query.token, 'secret', (err,data) => {
         if(err)
         {
             return res.json(err);
         }
         else if(data)
         {
-            return res.json({"otp":data.otp});
+            User.findOne({ email:data.email })
+            .then(user => res.json(user.otp))
+            .catch(err => res.json(err))     
         }
     })
 })
+
+router.patch('/verified',(req,res,next) => {
+    jwt.verify(req.body.token, 'secret', (err,data) => {
+        if(err)
+        {
+            return res.json(err);
+        }
+        else if(data)
+        {
+            console.log(data);
+            User.findOneAndUpdate({email: data.email}, {$set: { isVerified:"true" }})
+                .then(() => res.json({"msg":"User Verified Successfully"}))
+                .catch(err => res.json(err))
+        }   
+    })
+})
+
+
+
+
+    
 
 
 module.exports = router;
